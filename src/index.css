@@ -150,133 +150,24 @@
   animation: routeDash 1.2s linear infinite;
 }
 
-/* --- Category-Specific Unique Animations for Easy Place Indication --- */
+/* --- Very Small, Clean Micro-Animation for Place Indication --- */
 
-/* 1. Hostels (Boys & Girls Hostel): Balloon Floating & Gentle Sway Animation */
-@keyframes balloonFloat {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-5px) rotate(2deg);
-  }
-  50% {
-    transform: translateY(-9px) rotate(0deg);
-  }
-  75% {
-    transform: translateY(-4px) rotate(-2deg);
-  }
-}
-
-@keyframes balloonPulseGlow {
+/* Tiny, subtle soft breathing ring for selected place (barely 2px beyond pin) */
+@keyframes microPulse {
   0% {
-    transform: translate(-50%, -50%) scale(0.75);
-    opacity: 0.85;
-  }
-  65% {
-    transform: translate(-50%, -50%) scale(1.35);
-    opacity: 0.15;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1.55);
-    opacity: 0;
-  }
-}
-
-/* 2. Academic Blocks (B, C, D Blocks): High-Tech Radar / Sonar Ping */
-@keyframes academicRadar {
-  0% {
-    transform: translate(-50%, -50%) scale(0.65);
-    opacity: 0.9;
-    border: 2px solid rgba(37, 99, 235, 0.85);
-  }
-  65% {
-    transform: translate(-50%, -50%) scale(1.35);
-    opacity: 0.25;
-    border: 1.5px solid rgba(59, 130, 246, 0.5);
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1.6);
-    opacity: 0;
-    border: 1px solid rgba(59, 130, 246, 0);
-  }
-}
-
-@keyframes academicHoverLift {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-3px);
-  }
-}
-
-/* 3. Dining (Mess & Canteen): Warm Steam Aroma Wave */
-@keyframes steamAromaWave {
-  0% {
-    transform: translate(-50%, -35%) scale(0.75);
-    opacity: 0.85;
-  }
-  50% {
-    transform: translate(-50%, -60%) scale(1.25);
-    opacity: 0.3;
-  }
-  100% {
-    transform: translate(-50%, -85%) scale(1.5);
-    opacity: 0;
-  }
-}
-
-@keyframes diningAromaLift {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(-3px) scale(1.04);
-  }
-}
-
-/* 4. Sports & Courts: Playful Ball Bounce Hop */
-@keyframes sportsBallBounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  30% {
-    transform: translateY(-7px) scaleY(1.05);
-  }
-  50% {
-    transform: translateY(0) scaleY(0.96);
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0.65;
   }
   70% {
-    transform: translateY(-2px);
+    transform: translate(-50%, -50%) scale(1.18);
+    opacity: 0.08;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.22);
+    opacity: 0;
   }
 }
 
-/* 5. Administration: Prestige Shimmer & Aura */
-@keyframes adminPrestigeAura {
-  0%, 100% {
-    box-shadow: 0 0 8px rgba(79, 70, 229, 0.5), 0 3px 8px rgba(0, 0, 0, 0.4);
-    transform: translateY(0);
-  }
-  50% {
-    box-shadow: 0 0 16px rgba(129, 140, 248, 0.85), 0 4px 12px rgba(0, 0, 0, 0.5);
-    transform: translateY(-2px);
-  }
-}
-
-/* 6. Library: Calm Breathing Wisdom Halo */
-@keyframes libraryBreatheHalo {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 0 6px rgba(56, 189, 248, 0.4);
-  }
-  50% {
-    transform: scale(1.06);
-    box-shadow: 0 0 14px rgba(56, 189, 248, 0.8);
-  }
-}
-
-/* Common Base Marker Rules */
 .campus-custom-marker {
   overflow: visible !important;
   background: transparent !important;
@@ -294,127 +185,35 @@
   width: 100px;
 }
 
-/* Active Category Animation Classes */
-.anim-hostel-balloon {
-  animation: balloonFloat 3s ease-in-out infinite;
-  z-index: 999 !important;
-}
-
-.anim-academic-active {
-  animation: academicHoverLift 2.2s ease-in-out infinite;
-  z-index: 999 !important;
-}
-
-.anim-dining-active {
-  animation: diningAromaLift 2.2s ease-in-out infinite;
-  z-index: 999 !important;
-}
-
-.anim-sports-active {
-  animation: sportsBallBounce 1.6s ease-in-out infinite;
-  z-index: 999 !important;
-}
-
-.anim-admin-active {
-  animation: adminPrestigeAura 2.2s ease-in-out infinite;
-  z-index: 999 !important;
-}
-
-.anim-library-active {
-  animation: libraryBreatheHalo 2.5s ease-in-out infinite;
-  z-index: 999 !important;
-}
-
-/* Category-Specific Beacon Rings */
-.beacon-hostel-balloon {
+/* Very small 30px micro-glow ring */
+.micro-beacon-ring {
   position: absolute;
   top: 14px;
   left: 50%;
-  width: 44px;
-  height: 44px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.55) 0%, rgba(16, 185, 129, 0.05) 65%, transparent 70%);
-  animation: balloonPulseGlow 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.45) 0%, rgba(37, 99, 235, 0.05) 60%, transparent 70%);
+  animation: microPulse 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
   pointer-events: none;
   z-index: 1;
-}
-
-.beacon-academic-radar {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  animation: academicRadar 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.beacon-dining-steam {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(234, 88, 12, 0.5) 0%, rgba(234, 88, 12, 0.05) 65%, transparent 70%);
-  animation: steamAromaWave 1.8s ease-out infinite;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.beacon-sports-bounce {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(34, 197, 94, 0.5) 0%, rgba(34, 197, 94, 0.05) 65%, transparent 70%);
-  animation: balloonPulseGlow 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.beacon-general-glow {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.5) 0%, rgba(59, 130, 246, 0.05) 65%, transparent 70%);
-  animation: balloonPulseGlow 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Balloon String for Hostels */
-.hostel-balloon-string {
-  position: absolute;
-  top: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1px;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.75);
-  box-shadow: 0 0 2px rgba(0,0,0,0.4);
-  pointer-events: none;
-  z-index: 5;
 }
 
 .campus-marker-pin {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.18s ease;
   position: relative;
   z-index: 10;
 }
 
 .campus-marker-wrapper:hover .campus-marker-pin {
-  transform: scale(1.12) translateY(-2px);
+  transform: translateY(-2px);
+}
+
+.place-selected-active .campus-marker-pin {
+  transform: translateY(-2px);
 }
 
 /* High-Visibility Permanent Label Chip */
@@ -442,11 +241,10 @@
   background: #1d4ed8;
   color: #ffffff;
   border-color: #93c5fd;
-  box-shadow: 0 0 10px rgba(59, 130, 246, 0.65), 0 3px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
   font-size: 11px;
   font-weight: 800;
   padding: 3px 9px;
-  transform: translateY(1px);
 }
 
 /* Custom Scrollbar for Drawer/Lists */
