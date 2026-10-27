@@ -150,7 +150,7 @@ export const MapView: React.FC<MapViewProps> = ({
     }
   }, [isSatellite])
 
-  // 3. Render Campus Pathways (High-visibility solid blue routes matching satellite blueprint)
+  // 3. Render Campus Pedestrian Walkways (Light dotted line)
   useEffect(() => {
     const walkwayGroup = walkwayLayerGroupRef.current
     if (!walkwayGroup) return
@@ -166,36 +166,19 @@ export const MapView: React.FC<MapViewProps> = ({
       const from = nodeMap.get(edge.fromNodeId)
       const to = nodeMap.get(edge.toNodeId)
       if (from && to) {
-        // Subtle dark outline/casing for contrast against bright pavement and trees
-        const casing = L.polyline(
+        const poly = L.polyline(
           [
             [from.latitude, from.longitude],
             [to.latitude, to.longitude],
           ],
           {
-            color: '#0f172a',
-            weight: 5.5,
-            opacity: 0.6,
-            lineCap: 'round',
-            lineJoin: 'round',
+            color: isSatellite ? '#38bdf8' : '#64748b',
+            weight: 2,
+            opacity: 0.35,
+            dashArray: '3, 4',
           }
         )
-        // Solid vivid royal blue route matching blueprint
-        const core = L.polyline(
-          [
-            [from.latitude, from.longitude],
-            [to.latitude, to.longitude],
-          ],
-          {
-            color: '#2563eb',
-            weight: 3.5,
-            opacity: 0.95,
-            lineCap: 'round',
-            lineJoin: 'round',
-          }
-        )
-        walkwayGroup.addLayer(casing)
-        walkwayGroup.addLayer(core)
+        walkwayGroup.addLayer(poly)
       }
     })
   }, [isSatellite])

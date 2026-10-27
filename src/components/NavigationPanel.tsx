@@ -57,78 +57,82 @@ export const NavigationPanel: React.FC<NavigationPanelProps> = ({
   }
 
   return (
-    <div className="absolute top-3 left-3 right-3 md:left-4 md:right-auto md:w-96 z-40 flex flex-col gap-2 animate-slide-up">
-      {/* Top Turn Guidance Box (Google Maps Style Green/Navy Banner) */}
-      <div className="glass-panel-dark text-white rounded-3xl shadow-sheet border border-white/20 p-4 flex flex-col gap-3">
-        {/* Step Maneuver & Direction */}
-        <div className="flex items-start gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-600 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-900/50">
-            {getManeuverIcon(currentStep.instruction)}
+    <>
+      {/* Top Turn Guidance Box (Google Maps Style Maneuver Banner) */}
+      <div className="absolute top-0 left-0 right-0 md:top-3 md:left-4 md:right-auto md:w-96 z-40 animate-slide-down pointer-events-auto">
+        <div className="glass-panel-dark text-white rounded-b-3xl md:rounded-3xl shadow-2xl border-b md:border border-white/20 p-3 sm:p-3.5 flex flex-col gap-2.5">
+          {/* Step Maneuver & Direction */}
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-emerald-600 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-950/40">
+              {getManeuverIcon(currentStep.instruction)}
+            </div>
+
+            <div className="flex flex-col min-w-0 flex-1">
+              {hasArrived ? (
+                <div className="flex flex-col">
+                  <span className="text-sm font-extrabold text-emerald-400">You have arrived!</span>
+                  <span className="text-xs text-slate-300 font-medium truncate">{destination.name}</span>
+                </div>
+              ) : isRerouting ? (
+                <div className="flex items-center gap-2 text-amber-400 font-bold text-xs py-1">
+                  <RotateCcw className="w-4 h-4 animate-spin" />
+                  <span>Rerouting walking path...</span>
+                </div>
+              ) : (
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold text-emerald-400">
+                    {currentStep.distanceMeters > 0
+                      ? `In ${formatDistance(currentStep.distanceMeters)}`
+                      : 'Destination ahead'}
+                  </span>
+                  <h3 className="text-xs sm:text-sm font-extrabold text-white leading-snug line-clamp-2">
+                    {currentStep.instruction}
+                  </h3>
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={onStopNavigation}
+              title="Stop walking navigation"
+              className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-colors shrink-0"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
 
-          <div className="flex flex-col min-w-0 flex-1">
-            {hasArrived ? (
-              <div className="flex flex-col">
-                <span className="text-sm font-extrabold text-emerald-400">You have arrived!</span>
-                <span className="text-xs text-slate-300 font-medium">{destination.name}</span>
-              </div>
-            ) : isRerouting ? (
-              <div className="flex items-center gap-2 text-amber-400 font-bold text-xs py-1">
-                <RotateCcw className="w-4 h-4 animate-spin" />
-                <span>Rerouting walking path...</span>
-              </div>
-            ) : (
-              <div className="flex flex-col">
-                <span className="text-xs font-bold text-emerald-400">
-                  {currentStep.distanceMeters > 0
-                    ? `In ${formatDistance(currentStep.distanceMeters)}`
-                    : 'Destination ahead'}
-                </span>
-                <h3 className="text-sm font-extrabold text-white leading-snug line-clamp-2">
-                  {currentStep.instruction}
-                </h3>
-              </div>
-            )}
-          </div>
+          {/* Off-Route Alert notice */}
+          {isOffRoute && !isRerouting && (
+            <div className="flex items-center gap-2 p-1.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[11px] font-semibold">
+              <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+              <span>Off planned path. Rerouting automatically...</span>
+            </div>
+          )}
 
-          <button
-            onClick={onStopNavigation}
-            title="Stop walking navigation"
-            className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-colors shrink-0"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          {/* Progress Bar */}
+          <div className="w-full bg-white/15 h-1.5 rounded-full overflow-hidden">
+            <div
+              className="bg-emerald-500 h-full transition-all duration-300 rounded-full"
+              style={{ width: `${progressPercentage}%` }}
+            />
+          </div>
         </div>
+      </div>
 
-        {/* Off-Route Alert notice */}
-        {isOffRoute && !isRerouting && (
-          <div className="flex items-center gap-2 p-2 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-semibold">
-            <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
-            <span>Off planned walking path. Rerouting automatically...</span>
-          </div>
-        )}
-
-        {/* Progress Bar */}
-        <div className="w-full bg-white/15 h-1.5 rounded-full overflow-hidden">
-          <div
-            className="bg-emerald-500 h-full transition-all duration-300 rounded-full"
-            style={{ width: `${progressPercentage}%` }}
-          />
-        </div>
-
-        {/* Live Trip Summary */}
-        <div className="flex items-center justify-between text-xs pt-1 border-t border-white/10">
+      {/* Bottom Docked Trip Summary Bar (Google Maps Style Bottom HUD) */}
+      <div className="absolute bottom-0 left-0 right-0 md:bottom-4 md:left-4 md:right-auto md:w-96 z-40 animate-slide-up pointer-events-auto">
+        <div className="glass-panel text-slate-900 rounded-t-3xl md:rounded-3xl shadow-2xl border-t md:border border-white/80 p-3 sm:p-3.5 pb-6 sm:pb-3.5 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="flex flex-col">
-              <span className="text-[10px] text-slate-400 uppercase font-semibold">Remaining</span>
-              <span className="text-sm font-extrabold text-white">
+              <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Remaining</span>
+              <span className="text-sm font-extrabold text-slate-900">
                 {formatDistance(remainingDistanceMeters)}
               </span>
             </div>
-            <div className="h-6 w-px bg-white/20" />
+            <div className="h-6 w-px bg-slate-200" />
             <div className="flex flex-col">
-              <span className="text-[10px] text-slate-400 uppercase font-semibold">Walk Time</span>
-              <span className="text-sm font-extrabold text-emerald-400">
+              <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Walk Time</span>
+              <span className="text-sm font-extrabold text-emerald-600">
                 {formatDuration(remainingDurationSeconds)}
               </span>
             </div>
@@ -136,12 +140,13 @@ export const NavigationPanel: React.FC<NavigationPanelProps> = ({
 
           <button
             onClick={onStopNavigation}
-            className="px-3 py-1.5 rounded-xl bg-red-600/90 hover:bg-red-600 text-white font-bold text-xs shadow-md transition-colors"
+            className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 active:scale-95 text-white font-bold text-xs shadow-md shadow-red-500/20 transition-all flex items-center gap-1.5"
           >
-            Stop
+            <Footprints className="w-3.5 h-3.5" />
+            <span>Stop Navigation</span>
           </button>
         </div>
       </div>
-    </div>
+    </>
   )
 }

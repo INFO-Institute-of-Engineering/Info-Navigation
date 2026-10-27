@@ -117,18 +117,34 @@ export const HomePage: React.FC = () => {
         mapRefOut={mapRef}
       />
 
-      {/* Top Search Bar (Hidden during active live navigation) */}
+      {/* Top Unified Google Maps Header Stack (Search + Categories + Alert Banner) */}
       {!progress.isActive && (
-        <SearchBar
-          locations={locations}
-          selectedDestination={selectedDestination}
-          onSelectDestination={handleSelectDestination}
-          userCoords={userCoords}
-          onRequestLocation={requestLocation}
-          gpsLoading={gpsLoading}
-          selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
-        />
+        <div className="absolute top-2.5 left-2.5 right-2.5 md:top-3 md:left-4 md:right-auto md:w-[410px] z-40 flex flex-col gap-1.5 pointer-events-none">
+          <div className="pointer-events-auto">
+            <SearchBar
+              locations={locations}
+              selectedDestination={selectedDestination}
+              onSelectDestination={handleSelectDestination}
+              userCoords={userCoords}
+              onRequestLocation={requestLocation}
+              gpsLoading={gpsLoading}
+              selectedCategory={selectedCategory}
+              onSelectCategory={setSelectedCategory}
+            />
+          </div>
+
+          <div className="pointer-events-auto">
+            <OutdoorAlertBanner
+              userCoords={userCoords}
+              isInsideCampus={isInsideCampus}
+              isLoading={gpsLoading}
+              error={gpsError}
+              onRequestLocation={requestLocation}
+              onCenterCampus={handleCampusOverview}
+              onRecenterGps={handleRecenterGps}
+            />
+          </div>
+        </div>
       )}
 
       {/* Floating Map Action Controls */}
@@ -142,17 +158,6 @@ export const HomePage: React.FC = () => {
         onOpenQrShare={() => setIsQrShareOpen(true)}
         gpsLoading={gpsLoading}
         hasGps={Boolean(userCoords)}
-      />
-
-      {/* Outside Campus Geofence / Location Permission Notice */}
-      <OutdoorAlertBanner
-        userCoords={userCoords}
-        isInsideCampus={isInsideCampus}
-        isLoading={gpsLoading}
-        error={gpsError}
-        onRequestLocation={requestLocation}
-        onCenterCampus={handleCampusOverview}
-        onRecenterGps={handleRecenterGps}
       />
 
       {/* Selected Destination Details Sheet */}

@@ -26,10 +26,25 @@ export function useNavigation(userCoords: Coordinates | null) {
   // Compute route when a destination is selected or when starting navigation
   const computeRoute = useCallback(
     (destination: CampusLocation, startLocation?: Coordinates | null): WalkingRoute | null => {
-      // Use user GPS if available, otherwise default to Campus Entrance gate as reference starting point
-      const start = startLocation || userCoords || {
-        latitude: 11.128145,
-        longitude: 77.039491,
+      // Determine effective start coordinates:
+      // If user is inside campus, navigate from their live position; otherwise start at the Main Entrance Gate
+      let start: Coordinates = startLocation || userCoords || {
+        latitude: 11.128134,
+        longitude: 77.039350,
+      }
+
+      if (start) {
+        const distFromCenter = calculateHaversineDistance(start, {
+          latitude: CAMPUS_CENTER[0],
+          longitude: CAMPUS_CENTER[1],
+        })
+        if (distFromCenter > 380) {
+          // User is outside the college area: start walking route at Main Entrance Gate
+          start = {
+            latitude: 11.128134,
+            longitude: 77.039350,
+          }
+        }
       }
 
       const route = RoutingService.calculateWalkingRoute(start, destination)
@@ -74,12 +89,7 @@ export function useNavigation(userCoords: Coordinates | null) {
   const startNavigation = useCallback(() => {
     if (!selectedDestination) return
 
-    // Recompute from real current user position
-    const start = userCoords || {
-      latitude: CAMPUS_CENTER[0],
-      longitude: CAMPUS_CENTER[1],
-    }
-    const route = computeRoute(selectedDestination, start)
+    const route = computeRoute(selectedDestination)
 
     setProgress((prev) => ({
       ...prev,

@@ -248,11 +248,23 @@
   display: block !important;
 }
 
-/* Smart Mobile Layout: Prevent text overlap on mobile phones */
+/* Smart Mobile Layout: Prevent text and button overlap on mobile phones */
 @media (max-width: 767px) {
   .place-label-chip:not(.is-selected-label) {
     display: none;
   }
+  .leaflet-control-zoom {
+    display: none !important;
+  }
+}
+
+/* Hide scrollbar utility for horizontal chip strips */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Custom Scrollbar for Drawer/Lists */

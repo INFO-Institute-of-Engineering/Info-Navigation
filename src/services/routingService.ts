@@ -50,7 +50,7 @@ export class RoutingService {
       return null
     }
 
-    // 4. Build coordinate sequence
+    // 4. Build coordinate sequence strictly along the verified campus path network
     const pathCoords: Array<[number, number]> = []
 
     const distToStartNode = calculateHaversineDistance(start, {
@@ -58,27 +58,15 @@ export class RoutingService {
       longitude: startNode.longitude,
     })
 
-    // If user's starting point is noticeably away from network node, include start; otherwise snap directly to the walkway
-    if (distToStartNode > 8) {
+    // If user is inside campus within 15 meters of the start node, smoothly connect their position
+    if (distToStartNode > 0 && distToStartNode <= 15) {
       pathCoords.push([start.latitude, start.longitude])
     }
 
-    // Include path network nodes
+    // Include path network nodes (100% follows verified blue routes)
     shortestPathNodes.forEach((node) => {
       pathCoords.push([node.latitude, node.longitude])
     })
-
-    // If target node is slightly offset from actual entrance portico, append entrance
-    const lastNode = shortestPathNodes[shortestPathNodes.length - 1]
-    if (
-      destination.entranceLatitude &&
-      destination.entranceLongitude &&
-      lastNode &&
-      (Math.abs(lastNode.latitude - destination.entranceLatitude) > 0.00005 ||
-        Math.abs(lastNode.longitude - destination.entranceLongitude) > 0.00005)
-    ) {
-      pathCoords.push([destination.entranceLatitude, destination.entranceLongitude])
-    }
 
     // 5. Calculate cumulative distance and duration
     let totalDistance = 0

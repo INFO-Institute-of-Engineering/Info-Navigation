@@ -62,26 +62,26 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div
       ref={containerRef}
-      className="absolute top-3 left-3 right-3 md:left-4 md:right-auto md:w-96 z-40 flex flex-col gap-2"
+      className="relative w-full flex flex-col gap-1.5"
     >
       {/* Top Main Search Bar */}
       <div className="glass-panel rounded-2xl shadow-google border border-white/60 p-1.5 flex flex-col transition-all">
         {/* College branding header */}
-        <div className="flex items-center justify-between px-2.5 py-1 text-slate-800 border-b border-slate-100/80 mb-1">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between px-2 py-1 text-slate-800 border-b border-slate-100/80 mb-1 gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             <img
               src="/images/info-logo.png"
-              alt="INFO Institute"
-              className="w-5 h-5 object-contain rounded"
+              alt="INFO Institute / CSE Infomeister"
+              className="w-7 h-7 sm:w-8 sm:h-8 object-cover rounded-full shadow-sm ring-1 ring-blue-900/15 shrink-0"
               onError={(e) => {
                 e.currentTarget.style.display = 'none'
               }}
             />
-            <div className="flex flex-col">
-              <span className="text-[11px] font-extrabold tracking-wide text-blue-900 leading-tight">
+            <div className="flex flex-col min-w-0">
+              <span className="text-[10px] sm:text-[11px] font-extrabold tracking-wide text-blue-900 leading-tight truncate">
                 INFO INSTITUTE OF ENGINEERING
               </span>
-              <span className="text-[9px] font-medium text-slate-500 leading-tight">
+              <span className="text-[8.5px] sm:text-[9px] font-medium text-slate-500 leading-tight truncate">
                 Coimbatore • Live Campus Navigation
               </span>
             </div>
@@ -96,7 +96,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                 ? `Hardware GPS Active (Accuracy: ±${Math.round(userCoords.accuracy || 5)}m)`
                 : 'Click to acquire device GPS location'
             }
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold transition-all shadow-sm active:scale-95 ${
+            className={`flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[9.5px] sm:text-[10px] font-bold transition-all shadow-sm active:scale-95 shrink-0 ${
               userCoords
                 ? 'bg-blue-600 text-white hover:bg-blue-700'
                 : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
@@ -149,7 +149,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
       {/* Search Results Dropdown */}
       {isOpen && (
-        <div className="glass-panel rounded-2xl shadow-2xl border border-white/80 max-h-80 overflow-y-auto p-1.5 flex flex-col gap-1 z-50 animate-fade-in">
+        <div className="absolute top-full left-0 right-0 mt-1 glass-panel rounded-2xl shadow-2xl border border-white/80 max-h-80 overflow-y-auto p-1.5 flex flex-col gap-1 z-50 animate-fade-in">
           {filteredLocations.length > 0 ? (
             filteredLocations.map((loc) => {
               const distanceMeters = userCoords
