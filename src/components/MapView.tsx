@@ -224,6 +224,51 @@ const getPlaceShortName = (loc: CampusLocation): string => {
   return loc.name.split('(')[0].trim()
 }
 
+// Category-specific animation selector
+const getCategoryAnimation = (loc: CampusLocation, isSelected: boolean) => {
+  if (loc.category === 'hostel' || loc.id === 'boys-hostel' || loc.id === 'girls-hostel') {
+    return {
+      wrapperClass: isSelected ? 'anim-hostel-balloon' : 'hover:anim-hostel-balloon',
+      beaconClass: 'beacon-hostel-balloon',
+      isBalloon: true,
+    }
+  }
+  if (loc.category === 'dining' || loc.id === 'mess' || loc.id === 'canteen') {
+    return {
+      wrapperClass: isSelected ? 'anim-dining-active' : '',
+      beaconClass: 'beacon-dining-steam',
+      isBalloon: false,
+    }
+  }
+  if (loc.category === 'sports' || loc.id === 'playground' || loc.id === 'volleyball' || loc.id === 'basketball') {
+    return {
+      wrapperClass: isSelected ? 'anim-sports-active' : '',
+      beaconClass: 'beacon-sports-bounce',
+      isBalloon: false,
+    }
+  }
+  if (loc.id === 'office-room') {
+    return {
+      wrapperClass: isSelected ? 'anim-admin-active' : '',
+      beaconClass: 'beacon-general-glow',
+      isBalloon: false,
+    }
+  }
+  if (loc.id === 'library') {
+    return {
+      wrapperClass: isSelected ? 'anim-library-active' : '',
+      beaconClass: 'beacon-academic-radar',
+      isBalloon: false,
+    }
+  }
+  // Academic blocks (B, C, D)
+  return {
+    wrapperClass: isSelected ? 'anim-academic-active' : '',
+    beaconClass: 'beacon-academic-radar',
+    isBalloon: false,
+  }
+}
+
   // 4. Render Building Destination Markers
   useEffect(() => {
     const map = mapInstanceRef.current
@@ -237,48 +282,100 @@ const getPlaceShortName = (loc: CampusLocation): string => {
       const pinColor = loc.color || '#2563eb'
       const badge = getPlaceBadge(loc)
       const shortName = getPlaceShortName(loc)
+      const { wrapperClass, beaconClass, isBalloon } = getCategoryAnimation(loc, isSelected)
 
-      // Custom Google Maps-grade pin with gentle beacon & permanent clear label
-      const iconHtml = `
-        <div class="campus-marker-wrapper ${isSelected ? 'place-selected-active' : ''}">
-          ${isSelected ? '<div class="place-beacon-ring"></div>' : ''}
-          <div class="campus-marker-pin">
-            <div style="
-              background: ${isSelected ? '#ffffff' : pinColor};
-              border: 2px solid ${isSelected ? pinColor : '#ffffff'};
-              color: ${isSelected ? pinColor : '#ffffff'};
-              width: ${isSelected ? '32px' : '28px'};
-              height: ${isSelected ? '32px' : '28px'};
-              border-radius: 50% 50% 50% 0;
-              transform: rotate(-45deg);
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              box-shadow: 0 3px 10px rgba(0,0,0,0.45);
-              transition: all 0.2s ease;
-            ">
-              <span style="
-                transform: rotate(45deg);
-                font-size: ${badge.length > 2 ? '9px' : '11px'};
-                font-weight: 800;
-                font-family: 'Inter', sans-serif;
-                letter-spacing: -0.02em;
+      // Custom Google Maps-grade pin with unique category animations (Balloon for Hostels, Radar for Blocks, Steam for Dining)
+      const iconHtml = isBalloon
+        ? `
+          <div class="campus-marker-wrapper ${wrapperClass}">
+            ${isSelected ? `<div class="${beaconClass}"></div>` : ''}
+            <div class="campus-marker-pin" style="position: relative;">
+              <!-- Aerial Floating Balloon with BH/GH badge -->
+              <div style="
+                background: ${isSelected ? '#ffffff' : pinColor};
+                border: 2px solid ${isSelected ? pinColor : '#ffffff'};
+                color: ${isSelected ? pinColor : '#ffffff'};
+                width: 32px;
+                height: 38px;
+                border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset -2px -2px 4px rgba(0,0,0,0.2), inset 2px 2px 4px rgba(255,255,255,0.4);
+                transition: all 0.25s ease;
+                position: relative;
               ">
-                ${badge}
-              </span>
+                <span style="
+                  font-size: 11px;
+                  font-weight: 800;
+                  font-family: 'Inter', sans-serif;
+                  letter-spacing: -0.02em;
+                  margin-top: -2px;
+                ">
+                  ${badge}
+                </span>
+                <!-- Balloon Knot -->
+                <div style="
+                  position: absolute;
+                  bottom: -4px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  width: 0;
+                  height: 0;
+                  border-left: 3.5px solid transparent;
+                  border-right: 3.5px solid transparent;
+                  border-top: 5px solid ${isSelected ? '#ffffff' : pinColor};
+                "></div>
+              </div>
+              <!-- Balloon Tether String -->
+              <div class="hostel-balloon-string"></div>
+            </div>
+            <div class="place-label-chip ${isSelected ? 'is-selected-label' : ''}">
+              ${shortName}
             </div>
           </div>
-          <div class="place-label-chip ${isSelected ? 'is-selected-label' : ''}">
-            ${shortName}
+        `
+        : `
+          <div class="campus-marker-wrapper ${wrapperClass}">
+            ${isSelected ? `<div class="${beaconClass}"></div>` : ''}
+            <div class="campus-marker-pin">
+              <div style="
+                background: ${isSelected ? '#ffffff' : pinColor};
+                border: 2px solid ${isSelected ? pinColor : '#ffffff'};
+                color: ${isSelected ? pinColor : '#ffffff'};
+                width: ${isSelected ? '32px' : '28px'};
+                height: ${isSelected ? '32px' : '28px'};
+                border-radius: 50% 50% 50% 0;
+                transform: rotate(-45deg);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 3px 10px rgba(0,0,0,0.45);
+                transition: all 0.2s ease;
+              ">
+                <span style="
+                  transform: rotate(45deg);
+                  font-size: ${badge.length > 2 ? '9px' : '11px'};
+                  font-weight: 800;
+                  font-family: 'Inter', sans-serif;
+                  letter-spacing: -0.02em;
+                ">
+                  ${badge}
+                </span>
+              </div>
+            </div>
+            <div class="place-label-chip ${isSelected ? 'is-selected-label' : ''}">
+              ${shortName}
+            </div>
           </div>
-        </div>
-      `
+        `
 
       const customIcon = L.divIcon({
         className: 'campus-custom-marker',
         html: iconHtml,
-        iconSize: [100, 56],
-        iconAnchor: [50, 28],
+        iconSize: [100, isBalloon ? 62 : 56],
+        iconAnchor: [50, isBalloon ? 38 : 28],
       })
 
       const marker = L.marker([loc.latitude, loc.longitude], {
