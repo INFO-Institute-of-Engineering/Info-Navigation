@@ -27,6 +27,7 @@ export interface PathEdge {
   surface: SurfaceType
   accessible: boolean
   verified: boolean
+  isIndoor?: boolean
 }
 
 export interface WalkingStep {

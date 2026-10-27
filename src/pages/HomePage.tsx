@@ -60,6 +60,11 @@ export const HomePage: React.FC = () => {
     }
   }, [locations, selectDestination, startNavigation])
 
+  // Automatically trigger location prompt on website entry (like Google Maps)
+  useEffect(() => {
+    requestLocation()
+  }, [requestLocation])
+
   // Center on college campus overview
   const handleCampusOverview = useCallback(() => {
     if (mapRef.current) {
@@ -139,10 +144,13 @@ export const HomePage: React.FC = () => {
         hasGps={Boolean(userCoords)}
       />
 
-      {/* Outside Campus Geofence / Notice */}
+      {/* Outside Campus Geofence / Location Permission Notice */}
       <OutdoorAlertBanner
         userCoords={userCoords}
         isInsideCampus={isInsideCampus}
+        isLoading={gpsLoading}
+        error={gpsError}
+        onRequestLocation={requestLocation}
         onCenterCampus={handleCampusOverview}
         onRecenterGps={handleRecenterGps}
       />

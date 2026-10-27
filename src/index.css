@@ -245,6 +245,14 @@
   font-size: 11px;
   font-weight: 800;
   padding: 3px 9px;
+  display: block !important;
+}
+
+/* Smart Mobile Layout: Prevent text overlap on mobile phones */
+@media (max-width: 767px) {
+  .place-label-chip:not(.is-selected-label) {
+    display: none;
+  }
 }
 
 /* Custom Scrollbar for Drawer/Lists */

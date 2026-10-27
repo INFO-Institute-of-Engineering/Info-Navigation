@@ -31,7 +31,7 @@ export const MapControls: React.FC<MapControlsProps> = ({
   hasGps,
 }) => {
   return (
-    <div className="absolute right-4 top-20 md:top-24 z-30 flex flex-col gap-2.5">
+    <div className="absolute right-3 bottom-24 md:bottom-auto md:top-24 md:right-4 z-30 flex flex-col gap-2.5">
       {/* Satellite / Street Map Toggle */}
       <button
         onClick={onToggleSatellite}
