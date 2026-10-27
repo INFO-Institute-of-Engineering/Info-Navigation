@@ -7,6 +7,7 @@ import { NavigationPanel } from '../components/NavigationPanel'
 import { MapControls } from '../components/MapControls'
 import { OutdoorAlertBanner } from '../components/OutdoorAlertBanner'
 import { QrShareModal } from '../components/QrShareModal'
+import { IntroScreen } from '../components/IntroScreen'
 
 import { getStoredCampusLocations } from '../data/campusLocations'
 import { CAMPUS_CENTER, DEFAULT_ZOOM } from '../data/campusBoundary'
@@ -20,6 +21,7 @@ export const HomePage: React.FC = () => {
   const [isTilted, setIsTilted] = useState<boolean>(false)
   const [selectedCategory, setSelectedCategory] = useState<CampusCategory | 'all'>('all')
   const [isQrShareOpen, setIsQrShareOpen] = useState<boolean>(false)
+  const [showIntro, setShowIntro] = useState<boolean>(true)
 
   const mapRef = useRef<L.Map | null>(null)
 
@@ -187,6 +189,11 @@ export const HomePage: React.FC = () => {
         destination={selectedDestination}
         userCoords={userCoords}
       />
+
+      {/* 3-Second Cinematic College Intro Screen (Option 2: Golden Prestige & Royal Academy) */}
+      {showIntro && (
+        <IntroScreen onFinish={() => setShowIntro(false)} />
+      )}
     </div>
   )
 }
