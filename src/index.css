@@ -86,31 +86,31 @@
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-/* GPS User Pulse Marker */
+/* GPS User Pulse Marker - Smooth, small intimation */
 @keyframes pulseRing {
   0% {
-    transform: scale(0.6);
-    opacity: 0.9;
+    transform: scale(0.7);
+    opacity: 0.8;
   }
-  70% {
-    transform: scale(2.4);
-    opacity: 0;
+  60% {
+    transform: scale(1.4);
+    opacity: 0.15;
   }
   100% {
-    transform: scale(2.4);
+    transform: scale(1.5);
     opacity: 0;
   }
 }
 
 .gps-pulse-ring {
   position: absolute;
-  top: -12px;
-  left: -12px;
-  width: 48px;
-  height: 48px;
+  top: -8px;
+  left: -8px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background-color: rgba(26, 115, 232, 0.35);
-  animation: pulseRing 2s cubic-bezier(0.2, 0, 0.3, 1) infinite;
+  animation: pulseRing 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
   pointer-events: none;
 }
 
@@ -150,17 +150,112 @@
   animation: routeDash 1.2s linear infinite;
 }
 
-/* Custom Marker Styling */
+/* --- Small, Gentle Animation for Easy to See Places --- */
+
+/* Soft Breathing Beacon Ring for Target Place */
+@keyframes placeBeaconPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.75);
+    opacity: 0.9;
+  }
+  65% {
+    transform: translate(-50%, -50%) scale(1.35);
+    opacity: 0.15;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Smooth, Gentle 3px Floating Hover for Selected Place */
+@keyframes placeGentleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.campus-custom-marker {
+  overflow: visible !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.campus-marker-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+  user-select: none;
+  width: 100px;
+}
+
+.place-beacon-ring {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.5) 0%, rgba(59, 130, 246, 0.05) 65%, transparent 70%);
+  animation: placeBeaconPulse 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.place-selected-active {
+  animation: placeGentleFloat 2.4s ease-in-out infinite;
+  z-index: 999 !important;
+}
+
 .campus-marker-pin {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 10;
 }
 
-.campus-marker-pin:hover {
-  transform: scale(1.15) translateY(-4px);
-  z-index: 9999 !important;
+.campus-marker-wrapper:hover .campus-marker-pin {
+  transform: scale(1.12) translateY(-2px);
+}
+
+/* High-Visibility Permanent Label Chip */
+.place-label-chip {
+  margin-top: 3px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #f8fafc;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 2px 7px;
+  border-radius: 6px;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  pointer-events: none;
+  transition: all 0.2s ease;
+  z-index: 12;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.place-label-chip.is-selected-label {
+  background: #1d4ed8;
+  color: #ffffff;
+  border-color: #93c5fd;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.65), 0 3px 8px rgba(0, 0, 0, 0.4);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 9px;
+  transform: translateY(1px);
 }
 
 /* Custom Scrollbar for Drawer/Lists */

@@ -181,6 +181,49 @@ export const MapView: React.FC<MapViewProps> = ({
     })
   }, [isSatellite])
 
+// Helper to get distinctive, clear letter badges for each campus block/landmark
+const getPlaceBadge = (loc: CampusLocation): string => {
+  if (loc.id === 'b-block') return 'B'
+  if (loc.id === 'c-block') return 'C'
+  if (loc.id === 'd-block') return 'D'
+  if (loc.buildingInfo?.code?.startsWith('BLOCK-')) {
+    return loc.buildingInfo.code.replace('BLOCK-', '')
+  }
+  if (loc.id === 'office-room') return 'ADM'
+  if (loc.id === 'library') return 'LIB'
+  if (loc.id === 'mess') return 'MESS'
+  if (loc.id === 'canteen') return 'CAFE'
+  if (loc.id === 'boys-hostel') return 'BH'
+  if (loc.id === 'girls-hostel') return 'GH'
+  if (loc.id === 'parking') return 'P'
+  if (loc.id === 'auditorium') return 'AUD'
+  if (loc.id === 'main-entrance') return 'GATE'
+  if (loc.id === 'basketball') return 'BB'
+  if (loc.id === 'volleyball') return 'VB'
+  if (loc.id === 'playground') return 'PLAY'
+  return loc.buildingInfo?.code?.split('-')[0] || loc.name.charAt(0)
+}
+
+// Clean, high-visibility short name for permanent map chips
+const getPlaceShortName = (loc: CampusLocation): string => {
+  if (loc.id === 'b-block') return 'B - Block'
+  if (loc.id === 'c-block') return 'C - Block'
+  if (loc.id === 'd-block') return 'D - Block'
+  if (loc.id === 'office-room') return 'Admin Office'
+  if (loc.id === 'library') return 'Library'
+  if (loc.id === 'mess') return 'Dining Mess'
+  if (loc.id === 'canteen') return 'Canteen'
+  if (loc.id === 'boys-hostel') return 'Boys Hostel'
+  if (loc.id === 'girls-hostel') return 'Girls Hostel'
+  if (loc.id === 'parking') return 'Parking Bays'
+  if (loc.id === 'auditorium') return 'Auditorium'
+  if (loc.id === 'main-entrance') return 'Main Entrance'
+  if (loc.id === 'basketball') return 'Basketball'
+  if (loc.id === 'volleyball') return 'Volleyball'
+  if (loc.id === 'playground') return 'Play Ground'
+  return loc.name.split('(')[0].trim()
+}
+
   // 4. Render Building Destination Markers
   useEffect(() => {
     const map = mapInstanceRef.current
@@ -192,61 +235,50 @@ export const MapView: React.FC<MapViewProps> = ({
     locations.forEach((loc) => {
       const isSelected = selectedDestination?.id === loc.id
       const pinColor = loc.color || '#2563eb'
+      const badge = getPlaceBadge(loc)
+      const shortName = getPlaceShortName(loc)
 
-      // Custom Google Maps-inspired SVG pin icon
+      // Custom Google Maps-grade pin with gentle beacon & permanent clear label
       const iconHtml = `
-        <div class="campus-marker-pin ${isSelected ? 'scale-125 z-50' : ''}" style="cursor: pointer;">
-          <div style="
-            background: ${isSelected ? '#ffffff' : pinColor};
-            border: 2px solid ${isSelected ? pinColor : '#ffffff'};
-            color: ${isSelected ? pinColor : '#ffffff'};
-            width: ${isSelected ? '36px' : '30px'};
-            height: ${isSelected ? '36px' : '30px'};
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            transition: all 0.25s ease;
-          ">
-            <span style="
-              transform: rotate(45deg);
-              font-size: ${isSelected ? '14px' : '11px'};
-              font-weight: 800;
-              font-family: 'Inter', sans-serif;
+        <div class="campus-marker-wrapper ${isSelected ? 'place-selected-active' : ''}">
+          ${isSelected ? '<div class="place-beacon-ring"></div>' : ''}
+          <div class="campus-marker-pin">
+            <div style="
+              background: ${isSelected ? '#ffffff' : pinColor};
+              border: 2px solid ${isSelected ? pinColor : '#ffffff'};
+              color: ${isSelected ? pinColor : '#ffffff'};
+              width: ${isSelected ? '32px' : '28px'};
+              height: ${isSelected ? '32px' : '28px'};
+              border-radius: 50% 50% 50% 0;
+              transform: rotate(-45deg);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              box-shadow: 0 3px 10px rgba(0,0,0,0.45);
+              transition: all 0.2s ease;
             ">
-              ${loc.buildingInfo?.code?.split('-')[0] || loc.name.charAt(0)}
-            </span>
+              <span style="
+                transform: rotate(45deg);
+                font-size: ${badge.length > 2 ? '9px' : '11px'};
+                font-weight: 800;
+                font-family: 'Inter', sans-serif;
+                letter-spacing: -0.02em;
+              ">
+                ${badge}
+              </span>
+            </div>
           </div>
-          ${
-            isSelected
-              ? `<div style="
-                  position: absolute;
-                  bottom: -22px;
-                  left: 50%;
-                  transform: translateX(-50%);
-                  background: rgba(15, 23, 42, 0.92);
-                  color: #ffffff;
-                  font-size: 11px;
-                  font-weight: 700;
-                  white-space: nowrap;
-                  padding: 3px 8px;
-                  border-radius: 6px;
-                  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-                  border: 1px solid rgba(255,255,255,0.2);
-                  pointer-events: none;
-                ">${loc.name}</div>`
-              : ''
-          }
+          <div class="place-label-chip ${isSelected ? 'is-selected-label' : ''}">
+            ${shortName}
+          </div>
         </div>
       `
 
       const customIcon = L.divIcon({
         className: 'campus-custom-marker',
         html: iconHtml,
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
+        iconSize: [100, 56],
+        iconAnchor: [50, 28],
       })
 
       const marker = L.marker([loc.latitude, loc.longitude], {
