@@ -13,6 +13,10 @@ import {
   Building,
   ChevronUp,
   ChevronDown,
+  Sparkles,
+  Award,
+  Monitor,
+  Star,
 } from 'lucide-react'
 import { formatDistance, formatDuration } from '../utils/distance'
 
@@ -80,7 +84,7 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({
           </button>
         </div>
 
-        {/* Title & Walking Metrics */}
+        {/* Title & Description */}
         <div className="flex flex-col">
           <h2 className="text-base font-extrabold text-slate-900 leading-tight">
             {destination.name}
@@ -89,6 +93,52 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({
             {destination.description}
           </p>
         </div>
+
+        {/* Key Highlighted Facilities (Always Visible for Instant Recognition) */}
+        {destination.buildingInfo?.highlightedFacilities && destination.buildingInfo.highlightedFacilities.length > 0 && (
+          <div className={`p-2.5 rounded-2xl border flex flex-col gap-1.5 shadow-xs transition-all ${
+            destination.id === 'office-room'
+              ? 'bg-gradient-to-r from-amber-50 via-amber-50/50 to-orange-50/30 border-amber-300'
+              : 'bg-gradient-to-r from-sky-50 via-blue-50/50 to-indigo-50/30 border-sky-300'
+          }`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <Sparkles className={`w-3.5 h-3.5 ${
+                  destination.id === 'office-room' ? 'text-amber-600' : 'text-sky-600'
+                }`} />
+                <span className={`text-[10px] font-black uppercase tracking-wider ${
+                  destination.id === 'office-room' ? 'text-amber-900' : 'text-sky-900'
+                }`}>
+                  {destination.id === 'office-room' ? 'Key Administrative Offices' : 'Featured Computing Laboratories'}
+                </span>
+              </div>
+              <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full ${
+                destination.id === 'office-room' ? 'bg-amber-100 text-amber-800' : 'bg-sky-100 text-sky-800'
+              }`}>
+                Highlighted
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {destination.buildingInfo.highlightedFacilities.map((fac, idx) => (
+                <div
+                  key={idx}
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-black tracking-wide shadow-xs border transition-transform active:scale-95 ${
+                    destination.id === 'office-room'
+                      ? 'bg-amber-500 text-white border-amber-600 shadow-amber-500/25'
+                      : 'bg-blue-600 text-white border-blue-700 shadow-blue-600/25'
+                  }`}
+                >
+                  {destination.id === 'office-room' ? (
+                    <Award className="w-3.5 h-3.5 text-amber-100 shrink-0" />
+                  ) : (
+                    <Monitor className="w-3.5 h-3.5 text-blue-100 shrink-0" />
+                  )}
+                  <span>{fac}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Walking Route Quick Metrics */}
         {currentRoute && (
@@ -127,14 +177,24 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({
                 Facilities & Features
               </span>
               <div className="flex flex-wrap gap-1">
-                {destination.buildingInfo.facilities.map((fac, idx) => (
-                  <span
-                    key={idx}
-                    className="text-[10px] font-medium bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md"
-                  >
-                    {fac}
-                  </span>
-                ))}
+                {destination.buildingInfo.facilities.map((fac, idx) => {
+                  const isHighlighted = destination.buildingInfo?.highlightedFacilities?.includes(fac)
+                  return (
+                    <span
+                      key={idx}
+                      className={`text-[10px] px-2 py-0.5 rounded-md flex items-center gap-1 ${
+                        isHighlighted
+                          ? destination.id === 'office-room'
+                            ? 'bg-amber-100 text-amber-900 font-bold border border-amber-300'
+                            : 'bg-blue-100 text-blue-900 font-bold border border-blue-300'
+                          : 'bg-slate-100 text-slate-700 font-medium'
+                      }`}
+                    >
+                      {isHighlighted && <Star className="w-2.5 h-2.5 fill-current shrink-0" />}
+                      {fac}
+                    </span>
+                  )
+                })}
               </div>
             </div>
           )}

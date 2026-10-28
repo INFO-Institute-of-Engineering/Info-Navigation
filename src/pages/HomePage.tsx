@@ -39,9 +39,12 @@ export const HomePage: React.FC = () => {
     selectedDestination,
     currentRoute,
     progress,
+    activeUserCoords,
     selectDestination,
     startNavigation,
     stopNavigation,
+    startSimulation,
+    stopSimulation,
   } = useNavigation(userCoords)
 
   // 3. Handle URL parameters (e.g. ?destination=b-block)
@@ -105,6 +108,28 @@ export const HomePage: React.FC = () => {
     [selectDestination]
   )
 
+  // Start walking navigation with Google Maps style camera focus
+  const handleStartNavigation = useCallback(() => {
+    startNavigation()
+    if (currentRoute && currentRoute.pathCoordinates.length > 0 && mapRef.current) {
+      const start = currentRoute.pathCoordinates[0]
+      mapRef.current.setView([start[0], start[1]], 19, {
+        animate: true,
+        duration: 0.8,
+      })
+    }
+  }, [startNavigation, currentRoute])
+
+  // Google Maps style camera auto-following during active walking navigation
+  useEffect(() => {
+    if (progress.isActive && activeUserCoords && mapRef.current) {
+      mapRef.current.panTo([activeUserCoords.latitude, activeUserCoords.longitude], {
+        animate: true,
+        duration: 0.6,
+      })
+    }
+  }, [progress.isActive, activeUserCoords])
+
   return (
     <div className="relative w-full h-full min-h-screen bg-slate-950 overflow-hidden font-sans">
       {/* Central Satellite Map Canvas */}
@@ -112,7 +137,7 @@ export const HomePage: React.FC = () => {
         locations={locations}
         selectedDestination={selectedDestination}
         onSelectDestination={handleSelectDestination}
-        userCoords={userCoords}
+        userCoords={activeUserCoords}
         currentRoute={currentRoute}
         isSatellite={isSatellite}
         isTilted={isTilted}
@@ -127,7 +152,7 @@ export const HomePage: React.FC = () => {
               locations={locations}
               selectedDestination={selectedDestination}
               onSelectDestination={handleSelectDestination}
-              userCoords={userCoords}
+              userCoords={activeUserCoords}
               onRequestLocation={requestLocation}
               gpsLoading={gpsLoading}
               selectedCategory={selectedCategory}
@@ -167,7 +192,7 @@ export const HomePage: React.FC = () => {
         <DestinationCard
           destination={selectedDestination}
           currentRoute={currentRoute}
-          onStartNavigation={startNavigation}
+          onStartNavigation={handleStartNavigation}
           onClose={() => selectDestination(null)}
           onOpenQrShare={() => setIsQrShareOpen(true)}
           isNavigating={progress.isActive}
@@ -179,6 +204,8 @@ export const HomePage: React.FC = () => {
         <NavigationPanel
           progress={progress}
           onStopNavigation={stopNavigation}
+          onStartSimulation={startSimulation}
+          onStopSimulation={stopSimulation}
         />
       )}
 

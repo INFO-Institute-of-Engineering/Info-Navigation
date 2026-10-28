@@ -211,7 +211,7 @@ const getPlaceShortName = (loc: CampusLocation): string => {
   if (loc.id === 'b-block') return 'B - Block'
   if (loc.id === 'c-block') return 'C - Block'
   if (loc.id === 'd-block') return 'D - Block'
-  if (loc.id === 'office-room') return 'Admin Office'
+  if (loc.id === 'office-room') return 'Admission Block'
   if (loc.id === 'library') return 'Library'
   if (loc.id === 'mess') return 'Dining Mess'
   if (loc.id === 'canteen') return 'Canteen'
@@ -239,15 +239,18 @@ const getPlaceShortName = (loc: CampusLocation): string => {
       const pinColor = loc.color || '#2563eb'
       const badge = getPlaceBadge(loc)
       const shortName = getPlaceShortName(loc)
+      const hasHighlights = Boolean(
+        loc.buildingInfo?.highlightedFacilities && loc.buildingInfo.highlightedFacilities.length > 0
+      )
 
       // Clean, elegant pin with very small, subtle micro-beacon ring
       const iconHtml = `
         <div class="campus-marker-wrapper ${isSelected ? 'place-selected-active' : ''}">
           ${isSelected ? '<div class="micro-beacon-ring"></div>' : ''}
-          <div class="campus-marker-pin">
+          <div class="campus-marker-pin" style="position: relative;">
             <div style="
               background: ${isSelected ? '#ffffff' : pinColor};
-              border: 2px solid ${isSelected ? pinColor : '#ffffff'};
+              border: 2px solid ${isSelected ? pinColor : (hasHighlights ? '#f59e0b' : '#ffffff')};
               color: ${isSelected ? pinColor : '#ffffff'};
               width: ${isSelected ? '32px' : '28px'};
               height: ${isSelected ? '32px' : '28px'};
@@ -256,7 +259,7 @@ const getPlaceShortName = (loc: CampusLocation): string => {
               display: flex;
               align-items: center;
               justify-content: center;
-              box-shadow: 0 3px 10px rgba(0,0,0,0.45);
+              box-shadow: ${hasHighlights ? '0 0 10px rgba(245, 158, 11, 0.5), 0 3px 10px rgba(0,0,0,0.45)' : '0 3px 10px rgba(0,0,0,0.45)'};
               transition: all 0.2s ease;
             ">
               <span style="
@@ -269,9 +272,22 @@ const getPlaceShortName = (loc: CampusLocation): string => {
                 ${badge}
               </span>
             </div>
+            ${hasHighlights ? `
+              <div style="
+                position: absolute;
+                top: -3px;
+                right: -3px;
+                width: 9px;
+                height: 9px;
+                border-radius: 50%;
+                background: #f59e0b;
+                border: 1.5px solid #ffffff;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+              "></div>
+            ` : ''}
           </div>
-          <div class="place-label-chip ${isSelected ? 'is-selected-label' : ''}">
-            ${shortName}
+          <div class="place-label-chip ${isSelected ? 'is-selected-label' : ''} ${hasHighlights ? 'has-highlight-chip' : ''}">
+            ${hasHighlights ? '★ ' : ''}${shortName}
           </div>
         </div>
       `

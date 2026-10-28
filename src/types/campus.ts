@@ -12,6 +12,7 @@ export interface BuildingDetails {
   code?: string
   floorsCount?: number
   facilities?: string[]
+  highlightedFacilities?: string[]
   notes?: string
 }
 

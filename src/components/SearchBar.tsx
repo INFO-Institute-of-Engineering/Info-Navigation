@@ -44,8 +44,27 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     const matchesDesc = loc.description.toLowerCase().includes(q)
     const matchesCode = loc.buildingInfo?.code?.toLowerCase().includes(q)
     const matchesKeywords = loc.keywords?.some((k) => k.toLowerCase().includes(q))
+    const matchesFacilities = loc.buildingInfo?.facilities?.some((f) => f.toLowerCase().includes(q))
+    const matchesHighlighted = loc.buildingInfo?.highlightedFacilities?.some((f) => f.toLowerCase().includes(q))
 
-    return matchesName || matchesDesc || matchesCode || matchesKeywords
+    return (
+      matchesName ||
+      matchesDesc ||
+      matchesCode ||
+      matchesKeywords ||
+      matchesFacilities ||
+      matchesHighlighted
+    )
+  })
+
+  // Prioritize highlighted destinations (Admission Block, D-Block) when viewing overview list
+  const displayLocations = [...filteredLocations].sort((a, b) => {
+    if (!query.trim()) {
+      const aHighlight = a.buildingInfo?.highlightedFacilities ? 1 : 0
+      const bHighlight = b.buildingInfo?.highlightedFacilities ? 1 : 0
+      return bHighlight - aHighlight
+    }
+    return 0
   })
 
   // Close dropdown on click outside
@@ -124,7 +143,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               setIsOpen(true)
             }}
             onFocus={() => setIsOpen(true)}
-            placeholder="Search academic blocks, labs, hostel..."
+            placeholder="Search Principal, CSE Lab, Admission, D-Block..."
             className="w-full bg-transparent text-sm text-slate-900 placeholder-slate-400 focus:outline-none"
           />
           {query && (
@@ -150,8 +169,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       {/* Search Results Dropdown */}
       {isOpen && (
         <div className="absolute top-full left-0 right-0 mt-1 glass-panel rounded-2xl shadow-2xl border border-white/80 max-h-80 overflow-y-auto p-1.5 flex flex-col gap-1 z-50 animate-fade-in">
-          {filteredLocations.length > 0 ? (
-            filteredLocations.map((loc) => {
+          {!query.trim() && (
+            <div className="px-2 pt-1 pb-0.5 text-[9.5px] font-bold text-slate-400 uppercase tracking-wider">
+              Featured Highlights & Campus Locations
+            </div>
+          )}
+          {displayLocations.length > 0 ? (
+            displayLocations.map((loc) => {
               const distanceMeters = userCoords
                 ? calculateHaversineDistance(
                     { latitude: userCoords.latitude, longitude: userCoords.longitude },
@@ -160,6 +184,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                 : null
 
               const isSelected = selectedDestination?.id === loc.id
+              const hasHighlights = Boolean(
+                loc.buildingInfo?.highlightedFacilities && loc.buildingInfo.highlightedFacilities.length > 0
+              )
 
               return (
                 <button
@@ -171,6 +198,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                   className={`w-full text-left p-2.5 rounded-xl transition-all flex items-start justify-between gap-3 ${
                     isSelected
                       ? 'bg-blue-50/90 border border-blue-200'
+                      : hasHighlights && !query.trim()
+                      ? 'bg-slate-50/70 hover:bg-slate-100/90 border border-slate-200/50'
                       : 'hover:bg-slate-50/90 border border-transparent'
                   }`}
                 >
@@ -185,16 +214,34 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                       <MapPin className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-xs font-bold text-slate-900 truncate">
-                        {loc.name}
-                      </span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-xs font-bold text-slate-900 truncate">
+                          {loc.name}
+                        </span>
+                        {loc.buildingInfo?.code && (
+                          <span className="text-[9px] font-mono text-blue-600 font-semibold">
+                            {loc.buildingInfo.code}
+                          </span>
+                        )}
+                      </div>
                       <span className="text-[11px] text-slate-500 line-clamp-1">
                         {loc.description}
                       </span>
-                      {loc.buildingInfo?.code && (
-                        <span className="text-[9px] font-mono text-blue-600 font-semibold mt-0.5">
-                          {loc.buildingInfo.code}
-                        </span>
+                      {loc.buildingInfo?.highlightedFacilities && (
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {loc.buildingInfo.highlightedFacilities.map((h, i) => (
+                            <span
+                              key={i}
+                              className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${
+                                loc.id === 'office-room'
+                                  ? 'bg-amber-50 text-amber-800 border-amber-200'
+                                  : 'bg-sky-50 text-sky-800 border-sky-200'
+                              }`}
+                            >
+                              ★ {h}
+                            </span>
+                          ))}
+                        </div>
                       )}
                     </div>
                   </div>

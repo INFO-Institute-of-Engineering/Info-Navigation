@@ -2,7 +2,7 @@ import type { CampusLocation, CategoryInfo } from '../types/campus'
 
 export const CAMPUS_CATEGORIES: CategoryInfo[] = [
   { id: 'academic', label: 'Academic Blocks', icon: 'GraduationCap', color: '#2563eb' },
-  { id: 'admin', label: 'Administration', icon: 'Building2', color: '#4f46e5' },
+  { id: 'admin', label: 'Admission & Admin', icon: 'Building2', color: '#4f46e5' },
   { id: 'facility', label: 'Auditorium & Halls', icon: 'Compass', color: '#0284c7' },
   { id: 'dining', label: 'Dining & Food', icon: 'Utensils', color: '#ea580c' },
   { id: 'hostel', label: 'Hostels', icon: 'Home', color: '#059669' },
@@ -200,7 +200,7 @@ export const defaultCampusLocations: CampusLocation[] = [
     id: 'd-block',
     name: 'D - Block (Specialized Labs)',
     category: 'academic',
-    description: 'Dedicated academic building situated on the western walkway housing specialized laboratories and lecture rooms.',
+    description: 'Dedicated academic building situated on the western walkway housing CSE LAB 3, CSE LAB 4, and specialized computing research facilities.',
     latitude: 11.126502,
     longitude: 77.038200,
     entranceLatitude: 11.126502,
@@ -211,12 +211,37 @@ export const defaultCampusLocations: CampusLocation[] = [
     buildingInfo: {
       code: 'BLOCK-D',
       floorsCount: 3,
-      facilities: ['Specialized Engineering Laboratories', 'CAD/CAM Graphics Lab', 'Seminar Hall'],
+      highlightedFacilities: [
+        'CSE LAB 3',
+        'CSE LAB 4',
+      ],
+      facilities: [
+        'CSE LAB 3',
+        'CSE LAB 4',
+        'Specialized Engineering Laboratories',
+        'CAD/CAM Graphics Lab',
+        'Seminar Hall',
+      ],
       notes: 'Cream/tan building on the west corridor opposite Library/C-Block.'
     },
     blueprintCoords: { x: 180, y: 620, width: 90, height: 100, labelX: 180, labelY: 600 },
     accessibilityInfo: { wheelchairAccessible: true },
-    keywords: ['d block', 'd-block', 'first year', 'labs', 'cad', 'cam', 'academic']
+    keywords: [
+      'd block',
+      'd-block',
+      'cse lab 3',
+      'cse lab 4',
+      'cse lab',
+      'computer lab 3',
+      'computer lab 4',
+      'lab 3',
+      'lab 4',
+      'first year',
+      'labs',
+      'cad',
+      'cam',
+      'academic',
+    ]
   },
   {
     id: 'b-block',
@@ -242,9 +267,9 @@ export const defaultCampusLocations: CampusLocation[] = [
   },
   {
     id: 'office-room',
-    name: 'Office Room (Administrative Wing)',
+    name: 'Admission Block & Administrative Wing',
     category: 'admin',
-    description: 'Central administrative department housing Principal Chamber, Administrative Officer, Accounts, and Student Admissions.',
+    description: 'Central administrative department housing PRINCIPAL OFFICE, CHAIR PERSON OFFICE, ACCOUNTANT OFFICE, and Student Admissions.',
     latitude: 11.127239,
     longitude: 77.039350,
     entranceLatitude: 11.127239,
@@ -255,12 +280,44 @@ export const defaultCampusLocations: CampusLocation[] = [
     buildingInfo: {
       code: 'ADM-OFFICE',
       floorsCount: 3,
-      facilities: ['Principal Chamber', 'Registrar & Admin Office', 'Accounts & Fees Counter', 'Admissions Cell', 'Exam Cell'],
+      highlightedFacilities: [
+        'PRINCIPAL OFFICE',
+        'CHAIR PERSON OFFICE',
+        'ACCOUNTANT OFFICE',
+      ],
+      facilities: [
+        'PRINCIPAL OFFICE',
+        'CHAIR PERSON OFFICE',
+        'ACCOUNTANT OFFICE',
+        'Student Admissions Desk',
+        'Registrar & Admin Office',
+        'Exam Cell',
+      ],
       notes: 'Southern wing of the front central block facing the courtyard.'
     },
     blueprintCoords: { x: 330, y: 420, width: 220, height: 50, labelX: 330, labelY: 410 },
     accessibilityInfo: { wheelchairAccessible: true, notes: 'Main ramp access at central entrance' },
-    keywords: ['office', 'office room', 'admin', 'principal', 'dean', 'accounts', 'fees', 'admission', 'exam cell']
+    keywords: [
+      'admission',
+      'admission block',
+      'admissions',
+      'principal',
+      'principal office',
+      'chair person',
+      'chairperson',
+      'chair person office',
+      'chairperson office',
+      'accountant',
+      'accountant office',
+      'accounts',
+      'fees',
+      'office',
+      'office room',
+      'admin',
+      'administrative block',
+      'administrative wing',
+      'exam cell',
+    ]
   },
   {
     id: 'c-block',
@@ -351,12 +408,13 @@ export const defaultCampusLocations: CampusLocation[] = [
   }
 ]
 
-export const CAMPUS_STORAGE_KEY = 'info_campus_verified_locations_v5'
+export const CAMPUS_STORAGE_KEY = 'info_campus_verified_locations_v6'
 
 export function getStoredCampusLocations(): CampusLocation[] {
   if (typeof window !== 'undefined') {
     try {
       // Clear legacy storage keys
+      localStorage.removeItem('info_campus_verified_locations_v5')
       localStorage.removeItem('info_campus_verified_locations_v4')
       localStorage.removeItem('info_campus_location_overrides_v2')
       localStorage.removeItem('info_campus_verified_locations_v8')

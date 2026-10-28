@@ -146,7 +146,7 @@ export const campusPathNodes: PathNode[] = [
   // --- 5. Central Vertical Link: Office Room to C-Block to Library ---
   {
     id: 'node_office_room',
-    name: 'Office Room (Admin Wing)',
+    name: 'Admission Block & Admin Office',
     latitude: 11.127239,
     longitude: 77.039350,
     locationId: 'office-room',
@@ -175,7 +175,7 @@ export const campusPathNodes: PathNode[] = [
   },
   {
     id: 'node_dblock',
-    name: 'D - Block Entrance',
+    name: 'D - Block Entrance (CSE Labs 3 & 4)',
     latitude: 11.126502,
     longitude: 77.038200,
     locationId: 'd-block',

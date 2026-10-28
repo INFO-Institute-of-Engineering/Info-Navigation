@@ -63,6 +63,7 @@ export interface NavigationProgress {
   isOffRoute: boolean
   isRerouting: boolean
   hasArrived: boolean
+  isSimulating?: boolean
 }
 
 export interface GeolocationState {
