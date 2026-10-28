@@ -5,6 +5,7 @@ import {
   Maximize2,
   Box,
   Share2,
+  Download,
 } from 'lucide-react'
 
 interface MapControlsProps {
@@ -17,6 +18,9 @@ interface MapControlsProps {
   onOpenQrShare: () => void
   gpsLoading: boolean
   hasGps: boolean
+  canInstall?: boolean
+  isInstalled?: boolean
+  onPromptInstall?: () => void
 }
 
 export const MapControls: React.FC<MapControlsProps> = ({
@@ -29,6 +33,9 @@ export const MapControls: React.FC<MapControlsProps> = ({
   onOpenQrShare,
   gpsLoading,
   hasGps,
+  canInstall,
+  isInstalled,
+  onPromptInstall,
 }) => {
   return (
     <div className="absolute right-2.5 top-[112px] md:top-24 md:right-4 z-30 flex flex-col gap-2">
@@ -90,6 +97,18 @@ export const MapControls: React.FC<MapControlsProps> = ({
         <Share2 className="w-4 h-4 md:w-5 md:h-5" />
         <span className="sr-only">Share Route QR</span>
       </button>
+
+      {/* Install App Button (Subtle, only shown when installable and not installed) */}
+      {canInstall && !isInstalled && onPromptInstall && (
+        <button
+          onClick={onPromptInstall}
+          title="Install INFO Campus Navigator App"
+          className="w-10 h-10 md:w-11 md:h-11 rounded-xl md:rounded-2xl glass-panel shadow-google flex items-center justify-center text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 active:scale-95 transition-all border border-emerald-400/40 animate-pulse"
+        >
+          <Download className="w-4 h-4 md:w-5 md:h-5 text-emerald-600" />
+          <span className="sr-only">Install Campus Navigator App</span>
+        </button>
+      )}
     </div>
   )
 }

@@ -8,11 +8,14 @@ import { MapControls } from '../components/MapControls'
 import { OutdoorAlertBanner } from '../components/OutdoorAlertBanner'
 import { QrShareModal } from '../components/QrShareModal'
 import { IntroScreen } from '../components/IntroScreen'
+import { InstallBanner } from '../components/InstallBanner'
+import { InstallPromptModal } from '../components/InstallPromptModal'
 
 import { getStoredCampusLocations } from '../data/campusLocations'
 import { CAMPUS_CENTER, DEFAULT_ZOOM } from '../data/campusBoundary'
 import { useGeolocation } from '../hooks/useGeolocation'
 import { useNavigation } from '../hooks/useNavigation'
+import { usePWA } from '../hooks/usePWA'
 import type { CampusLocation, CampusCategory } from '../types/campus'
 
 export const HomePage: React.FC = () => {
@@ -22,6 +25,16 @@ export const HomePage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<CampusCategory | 'all'>('all')
   const [isQrShareOpen, setIsQrShareOpen] = useState<boolean>(false)
   const [showIntro, setShowIntro] = useState<boolean>(true)
+
+  // PWA installability & service worker management
+  const {
+    canInstall,
+    isInstalled,
+    showIosInstructions,
+    promptInstall,
+    dismissBanner,
+    closeIosModal,
+  } = usePWA()
 
   const mapRef = useRef<L.Map | null>(null)
 
@@ -185,6 +198,9 @@ export const HomePage: React.FC = () => {
         onOpenQrShare={() => setIsQrShareOpen(true)}
         gpsLoading={gpsLoading}
         hasGps={Boolean(userCoords)}
+        canInstall={canInstall}
+        isInstalled={isInstalled}
+        onPromptInstall={promptInstall}
       />
 
       {/* Selected Destination Details Sheet */}
@@ -215,6 +231,22 @@ export const HomePage: React.FC = () => {
         onClose={() => setIsQrShareOpen(false)}
         destination={selectedDestination}
         userCoords={userCoords}
+      />
+
+      {/* Optional Install App Banner (Unobtrusive, dismissible for session) */}
+      {!progress.isActive && (
+        <InstallBanner
+          canInstall={canInstall}
+          isInstalled={isInstalled}
+          onInstall={promptInstall}
+          onDismiss={dismissBanner}
+        />
+      )}
+
+      {/* iOS Safari Home Screen Add Instructions Modal */}
+      <InstallPromptModal
+        isOpen={showIosInstructions}
+        onClose={closeIosModal}
       />
 
       {/* 3-Second Cinematic College Intro Screen (Option 2: Golden Prestige & Royal Academy) */}
