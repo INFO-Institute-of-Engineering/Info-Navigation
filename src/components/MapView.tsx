@@ -1,13 +1,12 @@
 import React, { useEffect, useRef } from 'react'
 import L from 'leaflet'
 import type { CampusLocation } from '../types/campus'
-import type { Coordinates, WalkingRoute } from '../types/navigation'
+import type { Coordinates, WalkingRoute, PathNode } from '../types/navigation'
 import {
   CAMPUS_CENTER,
   CAMPUS_BOUNDS,
   CAMPUS_BOUNDARY_POLYGON,
   DEFAULT_ZOOM,
-  MIN_ZOOM,
   MAX_ZOOM,
 } from '../data/campusBoundary'
 import { campusPathEdges, campusPathNodes } from '../data/campusPaths'
@@ -21,8 +20,50 @@ interface MapViewProps {
   currentRoute: WalkingRoute | null
   isSatellite: boolean
   isTilted: boolean
-  onMapClick?: (coords: { latitude: number; longitude: number }) => void
   mapRefOut?: React.MutableRefObject<L.Map | null>
+}
+
+// Distinctive, high-visibility badges for campus blocks/landmarks
+const getPlaceBadge = (loc: CampusLocation): string => {
+  if (loc.id === 'b-block') return 'B'
+  if (loc.id === 'c-block') return 'C'
+  if (loc.id === 'd-block') return 'D'
+  if (loc.buildingInfo?.code?.startsWith('BLOCK-')) {
+    return loc.buildingInfo.code.replace('BLOCK-', '')
+  }
+  if (loc.id === 'office-room') return 'ADM'
+  if (loc.id === 'library') return 'LIB'
+  if (loc.id === 'mess') return 'MESS'
+  if (loc.id === 'canteen') return 'CAFE'
+  if (loc.id === 'boys-hostel') return 'BH'
+  if (loc.id === 'girls-hostel') return 'GH'
+  if (loc.id === 'parking') return 'P'
+  if (loc.id === 'auditorium') return 'AUD'
+  if (loc.id === 'main-entrance') return 'GATE'
+  if (loc.id === 'basketball' || loc.id === 'basketball-court') return 'BB'
+  if (loc.id === 'volleyball' || loc.id === 'volleyball-court') return 'VB'
+  if (loc.id === 'playground') return 'PLAY'
+  return loc.buildingInfo?.code?.split('-')[0] || loc.name.charAt(0)
+}
+
+// Clean short name for permanent map chips
+const getPlaceShortName = (loc: CampusLocation): string => {
+  if (loc.id === 'b-block') return 'B - Block'
+  if (loc.id === 'c-block') return 'C - Block'
+  if (loc.id === 'd-block') return 'D - Block'
+  if (loc.id === 'office-room') return 'Admission Block'
+  if (loc.id === 'library') return 'Library'
+  if (loc.id === 'mess') return 'Dining Mess'
+  if (loc.id === 'canteen') return 'Canteen'
+  if (loc.id === 'boys-hostel') return 'Boys Hostel'
+  if (loc.id === 'girls-hostel') return 'Girls Hostel'
+  if (loc.id === 'parking') return 'Parking Bays'
+  if (loc.id === 'auditorium') return 'Auditorium'
+  if (loc.id === 'main-entrance') return 'Main Entrance'
+  if (loc.id === 'basketball' || loc.id === 'basketball-court') return 'Basketball'
+  if (loc.id === 'volleyball' || loc.id === 'volleyball-court') return 'Volleyball'
+  if (loc.id === 'playground') return 'Play Ground'
+  return loc.name.split('(')[0].trim()
 }
 
 export const MapView: React.FC<MapViewProps> = ({
@@ -34,7 +75,6 @@ export const MapView: React.FC<MapViewProps> = ({
   currentRoute,
   isSatellite,
   isTilted,
-  onMapClick,
   mapRefOut,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -51,10 +91,6 @@ export const MapView: React.FC<MapViewProps> = ({
   useEffect(() => {
     if (!containerRef.current || mapInstanceRef.current) return
 
-    const southWest = L.latLng(CAMPUS_BOUNDS[0][0] - 0.003, CAMPUS_BOUNDS[0][1] - 0.003)
-    const northEast = L.latLng(CAMPUS_BOUNDS[1][0] + 0.003, CAMPUS_BOUNDS[1][1] + 0.003)
-    const campusBounds = L.latLngBounds(southWest, northEast)
-
     const map = L.map(containerRef.current, {
       center: CAMPUS_CENTER,
       zoom: DEFAULT_ZOOM,
@@ -64,7 +100,7 @@ export const MapView: React.FC<MapViewProps> = ({
       attributionControl: true,
     })
 
-    // Custom positioned zoom control on desktop/mobile
+    // Custom positioned zoom control
     L.control
       .zoom({
         position: 'bottomright',
@@ -85,12 +121,6 @@ export const MapView: React.FC<MapViewProps> = ({
     markersLayerGroupRef.current = L.layerGroup().addTo(map)
     routeLayerGroupRef.current = L.layerGroup().addTo(map)
 
-    map.on('click', (e) => {
-      if (onMapClick) {
-        onMapClick({ latitude: e.latlng.lat, longitude: e.latlng.lng })
-      }
-    })
-
     mapInstanceRef.current = map
     if (mapRefOut) {
       mapRefOut.current = map
@@ -103,9 +133,9 @@ export const MapView: React.FC<MapViewProps> = ({
         mapRefOut.current = null
       }
     }
-  }, [mapRefOut, onMapClick])
+  }, [mapRefOut])
 
-  // 2. Handle Base Tile Layers (Real Satellite vs Modern Street)
+  // 2. Handle Base Tile Layers (Google Hybrid Satellite vs CartoDB Street)
   useEffect(() => {
     const map = mapInstanceRef.current
     const baseGroup = baseLayerGroupRef.current
@@ -114,28 +144,16 @@ export const MapView: React.FC<MapViewProps> = ({
     baseGroup.clearLayers()
 
     if (isSatellite) {
-      // High-resolution Esri World Imagery
+      // High-resolution Google Hybrid Satellite (satellite photography + roads and place labels)
       const satelliteTiles = L.tileLayer(
-        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        'https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
         {
-          attribution: 'Tiles &copy; Esri, Maxar, Earthstar Geographics',
+          attribution: '&copy; Google Maps Satellite',
           maxZoom: MAX_ZOOM,
-          maxNativeZoom: 19,
+          subdomains: ['0', '1', '2', '3'],
         }
       )
-
-      // Overlay transparent labels for campus streets & places
-      const labelsTiles = L.tileLayer(
-        'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
-        {
-          attribution: '',
-          maxZoom: MAX_ZOOM,
-          opacity: 0.75,
-        }
-      )
-
       baseGroup.addLayer(satelliteTiles)
-      baseGroup.addLayer(labelsTiles)
     } else {
       // CartoDB Voyager / Streets
       const streetTiles = L.tileLayer(
@@ -150,18 +168,18 @@ export const MapView: React.FC<MapViewProps> = ({
     }
   }, [isSatellite])
 
-  // 3. Render Campus Pedestrian Walkways (Light dotted line)
+  // 3. Render Campus Pedestrian Walkways from Authoritative Graph
   useEffect(() => {
     const walkwayGroup = walkwayLayerGroupRef.current
     if (!walkwayGroup) return
 
     walkwayGroup.clearLayers()
 
-    const nodeMap = new Map()
+    const nodeMap = new Map<string, PathNode>()
     campusPathNodes.forEach((n) => nodeMap.set(n.id, n))
 
     campusPathEdges.forEach((edge) => {
-      if (edge.isIndoor) return // Skip indoor corridor connections from outdoor map
+      if (edge.isIndoor) return
 
       const from = nodeMap.get(edge.fromNodeId)
       const to = nodeMap.get(edge.toNodeId)
@@ -172,59 +190,16 @@ export const MapView: React.FC<MapViewProps> = ({
             [to.latitude, to.longitude],
           ],
           {
-            color: isSatellite ? '#38bdf8' : '#64748b',
-            weight: 2,
-            opacity: 0.35,
-            dashArray: '3, 4',
+            color: isSatellite ? '#38bdf8' : '#2563eb',
+            weight: 2.5,
+            opacity: 0.1,
+            dashArray: '4, 6',
           }
         )
         walkwayGroup.addLayer(poly)
       }
     })
   }, [isSatellite])
-
-// Helper to get distinctive, clear letter badges for each campus block/landmark
-const getPlaceBadge = (loc: CampusLocation): string => {
-  if (loc.id === 'b-block') return 'B'
-  if (loc.id === 'c-block') return 'C'
-  if (loc.id === 'd-block') return 'D'
-  if (loc.buildingInfo?.code?.startsWith('BLOCK-')) {
-    return loc.buildingInfo.code.replace('BLOCK-', '')
-  }
-  if (loc.id === 'office-room') return 'ADM'
-  if (loc.id === 'library') return 'LIB'
-  if (loc.id === 'mess') return 'MESS'
-  if (loc.id === 'canteen') return 'CAFE'
-  if (loc.id === 'boys-hostel') return 'BH'
-  if (loc.id === 'girls-hostel') return 'GH'
-  if (loc.id === 'parking') return 'P'
-  if (loc.id === 'auditorium') return 'AUD'
-  if (loc.id === 'main-entrance') return 'GATE'
-  if (loc.id === 'basketball') return 'BB'
-  if (loc.id === 'volleyball') return 'VB'
-  if (loc.id === 'playground') return 'PLAY'
-  return loc.buildingInfo?.code?.split('-')[0] || loc.name.charAt(0)
-}
-
-// Clean, high-visibility short name for permanent map chips
-const getPlaceShortName = (loc: CampusLocation): string => {
-  if (loc.id === 'b-block') return 'B - Block'
-  if (loc.id === 'c-block') return 'C - Block'
-  if (loc.id === 'd-block') return 'D - Block'
-  if (loc.id === 'office-room') return 'Admission Block'
-  if (loc.id === 'library') return 'Library'
-  if (loc.id === 'mess') return 'Dining Mess'
-  if (loc.id === 'canteen') return 'Canteen'
-  if (loc.id === 'boys-hostel') return 'Boys Hostel'
-  if (loc.id === 'girls-hostel') return 'Girls Hostel'
-  if (loc.id === 'parking') return 'Parking Bays'
-  if (loc.id === 'auditorium') return 'Auditorium'
-  if (loc.id === 'main-entrance') return 'Main Entrance'
-  if (loc.id === 'basketball') return 'Basketball'
-  if (loc.id === 'volleyball') return 'Volleyball'
-  if (loc.id === 'playground') return 'Play Ground'
-  return loc.name.split('(')[0].trim()
-}
 
   // 4. Render Building Destination Markers
   useEffect(() => {
@@ -296,12 +271,13 @@ const getPlaceShortName = (loc: CampusLocation): string => {
         className: 'campus-custom-marker',
         html: iconHtml,
         iconSize: [100, 56],
-        iconAnchor: [50, 28],
+        iconAnchor: [50, 32],
       })
 
       const marker = L.marker([loc.latitude, loc.longitude], {
         icon: customIcon,
         zIndexOffset: isSelected ? 1000 : 100,
+        draggable: false,
       })
 
       marker.on('click', (e) => {
@@ -402,7 +378,7 @@ const getPlaceShortName = (loc: CampusLocation): string => {
     const { latitude, longitude, accuracy, heading } = userCoords
     const latLng = L.latLng(latitude, longitude)
 
-    // Accuracy Circle (hide if manual calibration pin)
+    // Accuracy Circle
     if (!isManualLocation && accuracy && accuracy > 0) {
       if (!userAccuracyCircleRef.current) {
         userAccuracyCircleRef.current = L.circle(latLng, {

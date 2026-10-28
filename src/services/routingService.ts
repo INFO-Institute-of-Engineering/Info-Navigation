@@ -58,8 +58,8 @@ export class RoutingService {
       longitude: startNode.longitude,
     })
 
-    // If user is inside campus within 15 meters of the start node, smoothly connect their position
-    if (distToStartNode > 0 && distToStartNode <= 15) {
+    // If starting point is close to the start node (within 80m), connect starting point smoothly
+    if (distToStartNode > 1 && distToStartNode <= 80) {
       pathCoords.push([start.latitude, start.longitude])
     }
 
@@ -67,6 +67,18 @@ export class RoutingService {
     shortestPathNodes.forEach((node) => {
       pathCoords.push([node.latitude, node.longitude])
     })
+
+    // Connect final segment directly into destination pin tip (zero gap)
+    const destPinLat = destination.latitude
+    const destPinLng = destination.longitude
+    const lastNode = shortestPathNodes[shortestPathNodes.length - 1]
+    const distToDestPin = calculateHaversineDistance(
+      { latitude: lastNode.latitude, longitude: lastNode.longitude },
+      { latitude: destPinLat, longitude: destPinLng }
+    )
+    if (distToDestPin > 1 && distToDestPin <= 80) {
+      pathCoords.push([destPinLat, destPinLng])
+    }
 
     // 5. Calculate cumulative distance and duration
     let totalDistance = 0

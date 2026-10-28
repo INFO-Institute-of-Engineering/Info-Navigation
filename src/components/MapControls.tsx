@@ -6,6 +6,7 @@ import {
   Box,
   Share2,
   Download,
+  SlidersHorizontal,
 } from 'lucide-react'
 
 interface MapControlsProps {

@@ -10,8 +10,7 @@ import { QrShareModal } from '../components/QrShareModal'
 import { IntroScreen } from '../components/IntroScreen'
 import { InstallBanner } from '../components/InstallBanner'
 import { InstallPromptModal } from '../components/InstallPromptModal'
-
-import { getStoredCampusLocations } from '../data/campusLocations'
+import { defaultCampusLocations } from '../data/campusLocations'
 import { CAMPUS_CENTER, DEFAULT_ZOOM } from '../data/campusBoundary'
 import { useGeolocation } from '../hooks/useGeolocation'
 import { useNavigation } from '../hooks/useNavigation'
@@ -19,7 +18,7 @@ import { usePWA } from '../hooks/usePWA'
 import type { CampusLocation, CampusCategory } from '../types/campus'
 
 export const HomePage: React.FC = () => {
-  const [locations] = useState<CampusLocation[]>(() => getStoredCampusLocations())
+  const locations = defaultCampusLocations
   const [isSatellite, setIsSatellite] = useState<boolean>(true)
   const [isTilted, setIsTilted] = useState<boolean>(false)
   const [selectedCategory, setSelectedCategory] = useState<CampusCategory | 'all'>('all')

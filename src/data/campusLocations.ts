@@ -31,10 +31,10 @@ export const defaultCampusLocations: CampusLocation[] = [
     name: 'Main Entrance & Security Arch',
     category: 'entrance',
     description: 'Main college entrance gate and 24/7 security checkpoint on Karuvalur - Kovilpalayam Road with central entrance avenue.',
-    latitude: 11.128134,
-    longitude: 77.039350,
-    entranceLatitude: 11.128134,
-    entranceLongitude: 77.039350,
+    latitude: 11.128101,
+    longitude: 77.0395,
+    entranceLatitude: 11.128101,
+    entranceLongitude: 77.0395,
     verified: true,
     source: 'Calibrated Rooftop Satellite Imagery Ground Truth',
     color: '#0d9488',
@@ -52,10 +52,10 @@ export const defaultCampusLocations: CampusLocation[] = [
     name: 'Campus Parking & Vehicle Bays',
     category: 'parking',
     description: 'Designated parking bays for two-wheelers, four-wheelers, faculty vehicles, and college transport adjacent to the Auditorium.',
-    latitude: 11.128608,
-    longitude: 77.039600,
-    entranceLatitude: 11.128608,
-    entranceLongitude: 77.039600,
+    latitude: 11.128331,
+    longitude: 77.039614,
+    entranceLatitude: 11.128331,
+    entranceLongitude: 77.039614,
     verified: true,
     source: 'Calibrated Rooftop Satellite Imagery Ground Truth',
     color: '#64748b',
@@ -73,10 +73,10 @@ export const defaultCampusLocations: CampusLocation[] = [
     name: 'College Auditorium',
     category: 'facility',
     description: 'Large air-conditioned convention auditorium located in the northeast sector next to the parking bays.',
-    latitude: 11.128687,
-    longitude: 77.039781,
-    entranceLatitude: 11.128687,
-    entranceLongitude: 77.039781,
+    latitude: 11.128495,
+    longitude: 77.039775,
+    entranceLatitude: 11.128495,
+    entranceLongitude: 77.039775,
     verified: true,
     source: 'Calibrated Rooftop Satellite Imagery Ground Truth',
     color: '#ea580c',
@@ -95,10 +95,10 @@ export const defaultCampusLocations: CampusLocation[] = [
     name: 'Canteen & Cafeteria',
     category: 'dining',
     description: 'Student cafeteria and snack bar serving meals, refreshments, tea, coffee, and fresh juices in the northwest zone.',
-    latitude: 11.128055,
-    longitude: 77.038450,
-    entranceLatitude: 11.128055,
-    entranceLongitude: 77.038450,
+    latitude: 11.128052,
+    longitude: 77.038705,
+    entranceLatitude: 11.128052,
+    entranceLongitude: 77.038705,
     verified: true,
     source: 'Calibrated Rooftop Satellite Imagery Ground Truth',
     color: '#ea580c',
@@ -116,10 +116,10 @@ export const defaultCampusLocations: CampusLocation[] = [
     name: 'Play Ground (Athletic Field)',
     category: 'sports',
     description: 'Spacious outdoor athletic sports ground on the western boundary for cricket, football, running, and track events.',
-    latitude: 11.127739,
-    longitude: 77.037957,
-    entranceLatitude: 11.127713,
-    entranceLongitude: 77.038574,
+    latitude: 11.127752,
+    longitude: 77.038332,
+    entranceLatitude: 11.127752,
+    entranceLongitude: 77.038332,
     verified: true,
     source: 'Calibrated Rooftop Satellite Imagery Ground Truth',
     color: '#16a34a',
@@ -137,10 +137,10 @@ export const defaultCampusLocations: CampusLocation[] = [
     name: 'Volleyball Court',
     category: 'sports',
     description: 'Regulation clay volleyball court situated along the western sports promenade south of the canteen.',
-    latitude: 11.127713,
-    longitude: 77.038450,
-    entranceLatitude: 11.127713,
-    entranceLongitude: 77.038574,
+    latitude: 11.12748,
+    longitude: 77.038533,
+    entranceLatitude: 11.12748,
+    entranceLongitude: 77.038533,
     verified: true,
     source: 'Calibrated Rooftop Satellite Imagery Ground Truth',
     color: '#16a34a',
@@ -158,10 +158,10 @@ export const defaultCampusLocations: CampusLocation[] = [
     name: 'Basketball Court',
     category: 'sports',
     description: 'Marked outdoor basketball court located south of the volleyball court along the western corridor.',
-    latitude: 11.127371,
-    longitude: 77.038450,
-    entranceLatitude: 11.127371,
-    entranceLongitude: 77.038574,
+    latitude: 11.127155,
+    longitude: 77.038527,
+    entranceLatitude: 11.127155,
+    entranceLongitude: 77.038527,
     verified: true,
     source: 'Calibrated Rooftop Satellite Imagery Ground Truth',
     color: '#16a34a',
@@ -179,10 +179,10 @@ export const defaultCampusLocations: CampusLocation[] = [
     name: 'Boys Hostel Complex',
     category: 'hostel',
     description: 'Residential hostel block for male students situated on the southwest flank with private access corridor.',
-    latitude: 11.127000,
-    longitude: 77.037800,
-    entranceLatitude: 11.127000,
-    entranceLongitude: 77.037800,
+    latitude: 11.126902,
+    longitude: 77.038366,
+    entranceLatitude: 11.126902,
+    entranceLongitude: 77.038366,
     verified: true,
     source: 'Calibrated Rooftop Satellite Imagery Ground Truth',
     color: '#059669',
@@ -201,10 +201,10 @@ export const defaultCampusLocations: CampusLocation[] = [
     name: 'D - Block (Specialized Labs)',
     category: 'academic',
     description: 'Dedicated academic building situated on the western walkway housing CSE LAB 3, CSE LAB 4, and specialized computing research facilities.',
-    latitude: 11.126502,
-    longitude: 77.038200,
-    entranceLatitude: 11.126502,
-    entranceLongitude: 77.038200,
+    latitude: 11.126429,
+    longitude: 77.038603,
+    entranceLatitude: 11.126429,
+    entranceLongitude: 77.038603,
     verified: true,
     source: 'Calibrated Rooftop Satellite Imagery Ground Truth',
     color: '#0284c7',
@@ -248,10 +248,10 @@ export const defaultCampusLocations: CampusLocation[] = [
     name: 'B - Block (Front Academic Wing)',
     category: 'academic',
     description: 'Primary academic building facing the main entrance avenue with central entrance portico, lecture halls, and faculty rooms.',
-    latitude: 11.127450,
-    longitude: 77.039350,
-    entranceLatitude: 11.127450,
-    entranceLongitude: 77.039350,
+    latitude: 11.127371,
+    longitude: 77.039385,
+    entranceLatitude: 11.127371,
+    entranceLongitude: 77.039385,
     verified: true,
     source: 'Calibrated Rooftop Satellite Imagery Ground Truth',
     color: '#2563eb',
@@ -270,10 +270,10 @@ export const defaultCampusLocations: CampusLocation[] = [
     name: 'Admission Block & Administrative Wing',
     category: 'admin',
     description: 'Central administrative department housing PRINCIPAL OFFICE, CHAIR PERSON OFFICE, ACCOUNTANT OFFICE, and Student Admissions.',
-    latitude: 11.127239,
-    longitude: 77.039350,
-    entranceLatitude: 11.127239,
-    entranceLongitude: 77.039350,
+    latitude: 11.127131,
+    longitude: 77.039,
+    entranceLatitude: 11.127131,
+    entranceLongitude: 77.039,
     verified: true,
     source: 'Calibrated Rooftop Satellite Imagery Ground Truth',
     color: '#4f46e5',
@@ -324,10 +324,10 @@ export const defaultCampusLocations: CampusLocation[] = [
     name: 'C - Block (Engineering Labs)',
     category: 'academic',
     description: 'Central academic and laboratory block directly behind B-Block featuring advanced electronics and core engineering labs.',
-    latitude: 11.127029,
-    longitude: 77.039350,
-    entranceLatitude: 11.127029,
-    entranceLongitude: 77.039350,
+    latitude: 11.126897,
+    longitude: 77.039366,
+    entranceLatitude: 11.126897,
+    entranceLongitude: 77.039366,
     verified: true,
     source: 'Calibrated Rooftop Satellite Imagery Ground Truth',
     color: '#0284c7',
@@ -346,10 +346,10 @@ export const defaultCampusLocations: CampusLocation[] = [
     name: 'Central Campus Library',
     category: 'academic',
     description: 'Comprehensive college library with extensive print collection, digital book database, research reading halls, and study cubicles.',
-    latitude: 11.126871,
-    longitude: 77.039350,
-    entranceLatitude: 11.126871,
-    entranceLongitude: 77.039350,
+    latitude: 11.126594,
+    longitude: 77.039,
+    entranceLatitude: 11.126594,
+    entranceLongitude: 77.039,
     verified: true,
     source: 'Calibrated Rooftop Satellite Imagery Ground Truth',
     color: '#2563eb',
@@ -368,10 +368,10 @@ export const defaultCampusLocations: CampusLocation[] = [
     name: 'Dining Mess Hall',
     category: 'dining',
     description: 'Spacious student dining and mess hall serving hygienic hot breakfast, lunch, snacks, and dinner.',
-    latitude: 11.125950,
-    longitude: 77.038750,
-    entranceLatitude: 11.125950,
-    entranceLongitude: 77.038750,
+    latitude: 11.126258,
+    longitude: 77.038842,
+    entranceLatitude: 11.126258,
+    entranceLongitude: 77.038842,
     verified: true,
     source: 'Calibrated Rooftop Satellite Imagery Ground Truth',
     color: '#ea580c',
@@ -389,10 +389,10 @@ export const defaultCampusLocations: CampusLocation[] = [
     name: 'Girls Hostel Complex',
     category: 'hostel',
     description: 'Secure multi-storey residential hostel for female students situated at the southern end of the campus.',
-    latitude: 11.126050,
-    longitude: 77.039200,
-    entranceLatitude: 11.126050,
-    entranceLongitude: 77.039200,
+    latitude: 11.126313,
+    longitude: 77.039027,
+    entranceLatitude: 11.126313,
+    entranceLongitude: 77.039027,
     verified: true,
     source: 'Calibrated Rooftop Satellite Imagery Ground Truth',
     color: '#059669',
@@ -411,33 +411,26 @@ export const defaultCampusLocations: CampusLocation[] = [
 export const CAMPUS_STORAGE_KEY = 'info_campus_verified_locations_v6'
 
 export function getStoredCampusLocations(): CampusLocation[] {
-  if (typeof window !== 'undefined') {
-    try {
-      // Clear legacy storage keys
-      localStorage.removeItem('info_campus_verified_locations_v5')
-      localStorage.removeItem('info_campus_verified_locations_v4')
-      localStorage.removeItem('info_campus_location_overrides_v2')
-      localStorage.removeItem('info_campus_verified_locations_v8')
-      localStorage.removeItem('info_campus_verified_locations_v9')
-      localStorage.removeItem('info_campus_verified_locations_v10')
-      localStorage.removeItem('info_campus_verified_locations_v1')
-      localStorage.removeItem('info_campus_verified_locations_v2')
-      localStorage.removeItem('info_campus_verified_locations_v3')
-      localStorage.removeItem('info_campus_manual_user_loc')
-
-      const raw = localStorage.getItem(CAMPUS_STORAGE_KEY)
-      if (raw) {
-        const overrides = JSON.parse(raw)
-        return defaultCampusLocations.map((loc) => {
-          if (overrides[loc.id]) {
-            return { ...loc, ...overrides[loc.id] }
-          }
-          return loc
-        })
-      }
-    } catch (e) {
-      console.warn('Failed to load overrides from localStorage', e)
-    }
-  }
   return defaultCampusLocations
+}
+
+export function saveStoredCampusLocations(locations: CampusLocation[]) {
+  if (typeof window !== 'undefined') {
+    const map: Record<string, Partial<CampusLocation>> = {}
+    locations.forEach((loc) => {
+      map[loc.id] = {
+        latitude: loc.latitude,
+        longitude: loc.longitude,
+        entranceLatitude: loc.entranceLatitude,
+        entranceLongitude: loc.entranceLongitude,
+      }
+    })
+    localStorage.setItem(CAMPUS_STORAGE_KEY, JSON.stringify(map))
+  }
+}
+
+export function resetStoredCampusLocations() {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(CAMPUS_STORAGE_KEY)
+  }
 }

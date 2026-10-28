@@ -10,16 +10,16 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onFinish }) => {
   const [isDismissed, setIsDismissed] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
-  // Auto-dismiss after 3.8 seconds
+  // Auto-dismiss after exactly 2.0 seconds
   useEffect(() => {
     const fadeTimer = setTimeout(() => {
       setIsFadingOut(true)
-    }, 3600)
+    }, 1700)
 
     const dismissTimer = setTimeout(() => {
       setIsDismissed(true)
       onFinish?.()
-    }, 4100)
+    }, 2000)
 
     return () => {
       clearTimeout(fadeTimer)
@@ -140,6 +140,16 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onFinish }) => {
       {/* Main Content Showcase */}
       <div className="relative z-10 flex flex-col items-center justify-center max-w-xl px-5 text-center">
         
+        {/* App Super-Title Above College Emblem */}
+        <div className="mb-3 sm:mb-4 flex flex-col items-center gap-1 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-900/70 via-indigo-900/50 to-blue-900/70 border border-cyan-400/40 shadow-[0_0_20px_rgba(34,211,238,0.25)] backdrop-blur-md">
+            <Compass className="w-4 h-4 text-cyan-400 animate-spin" style={{ animationDuration: '8s' }} />
+            <span className="text-xs sm:text-sm md:text-base font-black tracking-[0.25em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-100 to-blue-300 font-sans drop-shadow-sm">
+              INFO CAMPUS NAVIGATION
+            </span>
+          </div>
+        </div>
+
         {/* 1. Royal Medallion & Authentic College Emblem */}
         <div className="relative mb-5 flex items-center justify-center animate-slide-down">
           {/* Outer Pulsing Golden Ring */}
@@ -203,56 +213,51 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onFinish }) => {
           </p>
         </div>
 
-        {/* 5. Navigation System Ready Intimation */}
-        <div className="mt-5 flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-blue-950/60 border border-blue-400/30 text-blue-200 text-xs font-semibold shadow-inner animate-pulse">
-          <Compass className="w-4 h-4 text-blue-400 animate-spin" style={{ animationDuration: '6s' }} />
-          <span>Interactive Campus Navigation System</span>
-        </div>
-
         {/* 6. Elegant Golden Progress Line */}
         <div className="w-48 sm:w-60 h-1 bg-slate-800/80 rounded-full mt-6 overflow-hidden border border-white/10">
           <div
             className="h-full bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-200 rounded-full"
             style={{
-              animation: 'introProgress 3.6s linear forwards',
+              animation: 'introProgress 1.7s linear forwards',
             }}
           />
         </div>
       </div>
 
-      {/* 7. DEVELOPED BY Signature Card (Right Side Bottom Corner with Medium Size & Unique Animation) */}
-      <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 z-30 animate-slide-up">
-        <div className="relative group p-[1.5px] rounded-2xl bg-gradient-to-r from-amber-400/60 via-yellow-300/40 to-blue-500/60 shadow-2xl backdrop-blur-xl">
-          <div className="bg-slate-950/85 hover:bg-slate-900/90 rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 flex flex-col gap-1.5 transition-all duration-300 border border-white/10 text-right">
+      {/* 7. DEVELOPED BY Signature Card (Executive Micro-Card - Apple/Linear Style) */}
+      <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-5 z-30 animate-executive-card">
+        <div className="relative flex items-stretch rounded-xl bg-slate-900/85 backdrop-blur-xl border border-white/10 shadow-[0_8px_24px_rgba(0,0,0,0.55)] overflow-hidden">
+          {/* Subtle Gold Hairline Accent Bar on Left Edge */}
+          <div className="w-[3px] bg-gradient-to-b from-amber-400 via-yellow-300 to-amber-500 shrink-0" />
+
+          {/* Content */}
+          <div className="px-3.5 py-2 sm:px-4 sm:py-2.5 flex flex-col gap-1 text-right">
             {/* Header */}
-            <div className="flex items-center justify-end gap-1.5 pb-0.5 border-b border-amber-400/25">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
-              <span className="text-[9.5px] sm:text-[10.5px] font-black tracking-[0.22em] text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-yellow-200 uppercase font-mono">
+            <div className="flex items-center justify-end gap-1.5 pb-0.5 border-b border-white/5">
+              <span className="w-1 h-1 rounded-full bg-amber-400/90 shadow-[0_0_4px_rgba(245,158,11,0.8)]" />
+              <span className="text-[9px] font-black tracking-[0.22em] text-amber-300/90 uppercase font-mono">
                 DEVELOPED BY
               </span>
             </div>
 
-            {/* Developers List */}
-            <div className="flex flex-col gap-1 text-right">
-              {/* Sivanesh R */}
-              <div className="flex items-center justify-end gap-2 flex-wrap">
-                <span className="text-xs sm:text-[13px] font-extrabold text-white tracking-wide font-sans drop-shadow-sm">
-                  Sivanesh R
-                </span>
-                <span className="text-[9px] sm:text-[9.5px] font-black px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-400/40 uppercase tracking-wider font-mono shadow-xs">
-                  TECHNICAL LEAD
-                </span>
-              </div>
+            {/* Developer 1: Sivanesh R */}
+            <div className="flex items-center justify-end gap-2">
+              <span className="text-xs sm:text-[13px] font-bold text-white tracking-wide font-sans">
+                Sivanesh R
+              </span>
+              <span className="text-[8.5px] font-bold px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-400/30 uppercase tracking-wider font-mono">
+                Tech Lead
+              </span>
+            </div>
 
-              {/* Dinesh Kumar M M */}
-              <div className="flex items-center justify-end gap-2 flex-wrap">
-                <span className="text-xs sm:text-[13px] font-extrabold text-white tracking-wide font-sans drop-shadow-sm">
-                  Dinesh Kumar M M
-                </span>
-                <span className="text-[9px] sm:text-[9.5px] font-black px-2 py-0.5 rounded-md bg-blue-500/20 text-blue-300 border border-blue-400/40 uppercase tracking-wider font-mono shadow-xs">
-                  COORDINATOR
-                </span>
-              </div>
+            {/* Developer 2: Dinesh Kumar M M */}
+            <div className="flex items-center justify-end gap-2">
+              <span className="text-xs sm:text-[13px] font-bold text-slate-200 tracking-wide font-sans">
+                Dinesh Kumar M M
+              </span>
+              <span className="text-[8.5px] font-bold px-1.5 py-0.5 rounded bg-blue-500/15 text-blue-300 border border-blue-400/30 uppercase tracking-wider font-mono">
+                Coordinator
+              </span>
             </div>
           </div>
         </div>
